@@ -5,5 +5,30 @@
   "paginate": {
     "default": 10,
     "max": 50
+  },
+  "mongodb": "mongodb://localhost:27017/headless_cms",
+  "authentication": {
+    "secret": "236ba65e5d07b4c75be8ebbbd0800daecc68a2595903657c2033ebab1263e76077f71d9882db304a2e641978a90aa54295f051dd6e95f8cc984efb251b9505fd81c491e7ffc71447e745d7d46f82b99801cb661c6945da81b4db35fc2036e906d7ab3ebd22353bf11bf92b26ec2c1aa56e544ade1bc272f72a3154580707e02b7da862f9fb7bb510744fcfcc300fef0a89b827b399cab1abe13d65c2883a475095c8508e0fd0f21b163bc68bb1845dcaeb8ae7acf6e0ffa3c8bd3278f5e0746c027cae1fe4d1521937fcd534e7b0d838b4f8529d54d6723e19fc096326cbacfcbf8d4bf85c2f34ed9c7cbd342c7f8a1c37cec9598c8cb59d8043d605b3586765",
+    "strategies": [
+      "jwt",
+      "local"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "usernameField": "email",
+      "passwordField": "password"
+    }
   }
 }
