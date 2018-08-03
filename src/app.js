@@ -9,9 +9,8 @@ const feathers = require("@feathersjs/feathers");
 const configuration = require("@feathersjs/configuration");
 const express = require("@feathersjs/express");
 
-
-
 const middleware = require("./middleware");
+const seed = require("./seed");
 const services = require("./services");
 const appHooks = require("./app.hooks");
 const channels = require("./channels");
@@ -52,6 +51,8 @@ app.configure(channels);
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
 app.use(express.errorHandler({ logger }));
+
+app.configure(seed);
 
 app.hooks(appHooks);
 

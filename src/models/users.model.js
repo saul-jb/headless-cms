@@ -11,8 +11,7 @@ module.exports = function (app) {
 		password: { type: String, required: true },
 		username: { type: String, required: true },
 
-		// Auto filled on hook
-		permissions: [{ type: String }],
+		permissions: { type: Schema.Types.ObjectId, ref: "permissions" },
 
 		// Meta data
 		name: { type: String }

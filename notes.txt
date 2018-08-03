@@ -1,5 +1,5 @@
 Create a user with curl:
-curl 'http://localhost:3030/users/' -H 'Content-Type: application/json' --data-binary '{ "email": "feathers@example.com", "username": "feathers", "password": "secret" }'
+curl 'http://localhost:3030/services/users/' -H 'Content-Type: application/json' --data-binary '{ "email": "feathers@example.com", "username": "feathers", "password": "secret" }'
 
 Authenticate a user with curl:
 curl 'http://localhost:3030/authentication/' -H 'Content-Type: application/json' --data-binary '{ "strategy": "local", "email": "feathers@example.com", "password": "secret" }'
@@ -10,3 +10,19 @@ Auth stratergy list:
  ◯ Google
  ◯ Facebook
  ◯ GitHub
+
+
+
+
+User permissions system:
+PREDEFINED/CUSTOMISABLE
+Custom
+Subscriber
+Editor
+Admin (allows complete access to users below the admin level)
+Super Admin [*]
+
+SERVICE BASED
+Users
+Posts
+Pages

@@ -1,41 +1,44 @@
 const auth = require("@feathersjs/authentication");
 const local = require("@feathersjs/authentication-local");
 const checkPermissions = require("feathers-permissions");
+const {restrictToOwner} = require("feathers-authentication-hooks");
+const {iff} = require("feathers-hooks-common");
 
-const firstUserCheck = require("../../hooks/first-user-check");
+const restrictPermissions = require("../../hooks/restrict-permissions");
 
-// TODO: Seed the first user (admin)
+const generalUserPermmisions = [
+	// Must be a logged in user
+	auth.hooks.authenticate("jwt"),
+
+	// Must not send password as plain text
+	local.hooks.hashPassword({ passwordField: "password" }),
+
+	// Must have this permission...
+	checkPermissions({
+		roles: ["users"],
+		error: false
+	}),
+	// ...or is the owner
+	iff(context => !context.params.permitted,
+		restrictToOwner({ idField: "_id", ownerField: "_id"})
+	)
+];
 
 module.exports = {
 	before: {
-		all: [],
-		find: [
-			auth.hooks.authenticate("jwt"),
-			checkPermissions({ roles: ["users"] })
+		all: [
+			// Prevent the user from modifying permissions
+			restrictPermissions()
 		],
-		get: [
-			auth.hooks.authenticate("jwt"),
-			checkPermissions({ roles: ["users"] })
-		],
+		find: [...generalUserPermmisions],
+		get: [...generalUserPermmisions],
 		create: [
 			local.hooks.hashPassword({ passwordField: "password" }),
-			firstUserCheck(), // Will skip any further hooks for the first user
 			checkPermissions({ roles: ["users"] })
 		],
-		update: [
-			auth.hooks.authenticate("jwt"),
-			local.hooks.hashPassword({ passwordField: "password" }),
-			checkPermissions({ roles: ["users"] })
-		],
-		patch: [
-			auth.hooks.authenticate("jwt"),
-			local.hooks.hashPassword({ passwordField: "password" }),
-			checkPermissions({ roles: ["users"] })
-		],
-		remove: [
-			auth.hooks.authenticate("jwt"),
-			checkPermissions({ roles: ["users"] })
-		]
+		update: [...generalUserPermmisions],
+		patch: [...generalUserPermmisions],
+		remove: [...generalUserPermmisions]
 	},
 
 	after: {
