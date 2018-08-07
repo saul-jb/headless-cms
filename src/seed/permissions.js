@@ -3,11 +3,14 @@
 module.exports = [
 	{
 		name: "admin",
-		permissions: ["admin"]
+		permissions: ["admin", "pages:*", "comments:*", "custom_code:*", "users:*"]
 	},
 	{
 		name: "editor",
-		permissions: ["editor"]
+		permissions: [
+			"editor",
+			"pages:create", "pages:update", "pages:patch"
+		]
 	},
 	{
 		name: "subscriber",
