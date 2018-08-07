@@ -1,4 +1,12 @@
-const logger = require("./logger");
+const logger = require("../logger");
+const permissionsSeed = require("./permissions");
+
+/*
+Querys for permissions - if there is none seed database
+	Create super_admin in the "permissions" database
+	Create the admin with super_admin privledges in the "users" database
+	Create all the permissions defined in permissions.js in the "permissions" database
+*/
 
 module.exports = function (app) {
 	app.service("services/permissions").find().then(permissions => {
@@ -12,22 +20,17 @@ module.exports = function (app) {
 			return permissionService.create({
 				name: "super_admin",
 				permissions: "*"
-			}).then(result => {
+			}).then(superAdminPermission => {
 				const promises = [];
 
 				promises.push(userService.create({
 					username: "admin",
 					email: "admin",
 					password: "admin",
-					permissions: result._id
+					permissions: superAdminPermission._id
 				}));
-
-				promises.push(permissionService.create([
-					{
-						name: "admin",
-						permissions: "*"
-					}
-				]));
+				
+				promises.push(permissionService.create(permissionsSeed));
 
 				return promises;
 			});

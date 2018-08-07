@@ -5,16 +5,19 @@ const checkPermissions = require("feathers-permissions");
 // eslint-disable-next-line no-unused-vars
 module.exports = function (options = {}) {
 	return context => {
-		/*if (context.data) { // only on services "create", "update" and "patch"
+		if (context.data) { // only on services "create", "update" and "patch"
 			return checkPermissions({
 				roles: ["permissions"] // super admins already have acces, admins need this arrtibute
 			})(context).then(() => {
 				return context.app.get(context.params.user.permissions).then(role => {
-					if (role && role.permissions.includes("*")) {
+					if (
+						role &&
+						(role.permissions.includes("*") || role.permissions.includes("super_admin"))
+					) {
 						// Dont prevent anything because the super admin can do what he wants
 					} else if (role) {
 						// Admin...
-						// Dont prevent anything because the admisn can do what they want
+						context.data.permissions = null;
 
 					} else {
 						// Couldn't find the role...
@@ -29,7 +32,7 @@ module.exports = function (options = {}) {
 
 				return context;
 			});
-		}*/
+		}
 	};
 };
 
