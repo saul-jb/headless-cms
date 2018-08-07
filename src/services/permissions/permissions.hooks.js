@@ -11,12 +11,12 @@ module.exports = {
 		find: [],
 		get: [],
 		create: [
-			checkPermissions({ roles: ["super_admin"] }),
+			checkPermissions({ roles: ["super_admin", "permissions"] }),
 			defaultPermissions()
 		],
-		update: [ checkPermissions({ roles: ["super_admin"] }) ],
-		patch: [ checkPermissions({ roles: ["super_admin"] }) ],
-		remove: [ checkPermissions({ roles: ["super_admin"] }) ]
+		update: [ checkPermissions({ roles: ["super_admin", "permissions"] }) ],
+		patch: [ checkPermissions({ roles: ["super_admin", "permissions"] }) ],
+		remove: [ checkPermissions({ roles: ["super_admin", "permissions"] }) ]
 	},
 
 	after: {
