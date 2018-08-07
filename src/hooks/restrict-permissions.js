@@ -7,7 +7,7 @@ module.exports = function (options = {}) {
 	return context => {
 		if (context.data) { // only on services "create", "update" and "patch"
 			return checkPermissions({
-				roles: ["permissions"] // super admins already have acces, admins need this arrtibute
+				roles: ["permissions"] // super admins already have access, admins need this arrtibute
 			})(context).then(() => {
 				return context.app.get(context.params.user.permissions).then(role => {
 					if (
