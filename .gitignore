@@ -1,7 +1,9 @@
 # Logs
 logs
 *.log
-server-log/*
+server-log/all
+server-log/debug
+server-log/error
 
 # Runtime data
 pids
