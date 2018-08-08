@@ -26,3 +26,12 @@ SERVICE BASED
 Users
 Posts
 Pages
+
+
+v– find (GET /tasks) – finds all the documents matching the query (optional), also supports sorting and pagination
+– get (GET /tasks/:id) – finds a single document by id
+– create (POST /tasks) – creates a new document
+– update (PUT /tasks/:id) – updates the whole document by overwriting it with provided one (missing fields will be cleared)
+– patch (PATCH /tasks/:id) – updates only the fields provided (missing fields will remain untouched)
+– remove (DELETE /tasks/:id) – removes the document
+curl -X "DELETE" http://localhost:3030/messages/1

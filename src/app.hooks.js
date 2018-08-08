@@ -1,6 +1,8 @@
 // Application hooks that run for every service
 const log = require("./hooks/log");
 
+// must poulate permissions on requests.
+
 module.exports = {
 	before: {
 		all: [ log() ],

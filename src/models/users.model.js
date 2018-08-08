@@ -11,7 +11,8 @@ module.exports = function (app) {
 		password: { type: String, required: true },
 		username: { type: String, required: true },
 
-		permissions: { type: Schema.Types.ObjectId, ref: "permissions" },
+		permissionId: { type: Schema.Types.ObjectId, ref: "permissions" },
+		permissions: [{ type: String }],
 
 		// Meta data
 		name: { type: String }

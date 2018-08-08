@@ -24,11 +24,13 @@ const generalUserPermmisions = [
 	)
 ];
 
+const populatePermissions = require("../../hooks/populate-permissions");
+
 module.exports = {
 	before: {
-		all: [
-			// Prevent the user from modifying permissions
-			restrictPermissions()
+		all: [// Prevent the user from modifying permissions
+			restrictPermissions(),
+			populatePermissions()
 		],
 		find: [...generalUserPermmisions],
 		get: [...generalUserPermmisions],

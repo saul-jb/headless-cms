@@ -27,9 +27,9 @@ module.exports = function (app) {
 					username: "admin",
 					email: "admin",
 					password: "admin",
-					permissions: superAdminPermission._id
+					permissionId: superAdminPermission._id
 				}));
-				
+
 				promises.push(permissionService.create(permissionsSeed));
 
 				return promises;

@@ -9,11 +9,11 @@ module.exports = function (options = {}) {
 			if (Array.isArray(context.data)) {
 				context.data.forEach(user => {
 					if (!user.permissions) {
-						user.permissions = permissions.data[0];
+						user.permissionId = permissions.data[0]._id;
 					}
 				});
 			} else if (!context.data.permissions) {
-				context.data.permissions = permissions.data[0];
+				context.data.permissionId = permissions.data[0]._id;
 			}
 
 			return context;
