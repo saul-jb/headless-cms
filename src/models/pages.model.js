@@ -7,7 +7,7 @@ module.exports = function (app) {
 	const { Schema } = mongooseClient;
 	const pages = new Schema({
 		type: { type: String },
-		title: { type: String, required: true },
+		title: { type: String, required: true, unique: true },
 		content: { type: String },
 		author: { type: Schema.Types.ObjectId, ref: "users", required: true },
 		editors: [{ type: Schema.Types.ObjectId, ref: "users" }]
