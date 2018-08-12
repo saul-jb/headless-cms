@@ -1,39 +1,41 @@
-const auth = require("@feathersjs/authentication");
 const local = require("@feathersjs/authentication-local");
-const checkPermissions = require("feathers-permissions");
 const {restrictToOwner} = require("feathers-authentication-hooks");
 const {iff} = require("feathers-hooks-common");
 
+const auth = require("../../hooks/auth");
+const restrictToPublic = require("../../hooks/restrict-to-public");
+
 const restrictPermissions = require("../../hooks/restrict-permissions");
+const checkPermissions = require("../../hooks/check-permissions");
 
 const generalUserPermmisions = [
-	// Must be a logged in user
-	auth.hooks.authenticate("jwt"),
-
+	// User must be signed in to modify data
+	auth({error: true}),
 	// Must not send password as plain text
 	local.hooks.hashPassword({ passwordField: "password" }),
 
 	// Must have this permission...
-	checkPermissions({
+	/*checkPermissions({
 		roles: ["users"],
 		error: false
 	}),
+
 	// ...or is the owner
 	iff(context => !context.params.permitted,
 		restrictToOwner({ idField: "_id", ownerField: "_id"})
 	)
-];
-
-const populatePermissions = require("../../hooks/populate-permissions");
+*/];
 
 module.exports = {
 	before: {
-		all: [// Prevent the user from modifying permissions
-			restrictPermissions(),
-			populatePermissions()
+		all: [
+			// Prepare the "restrict-to-public" hook
+			auth(),
+			// Prevent the user from modifying permissions
+			restrictPermissions()
 		],
-		find: [...generalUserPermmisions],
-		get: [...generalUserPermmisions],
+		find: [],
+		get: [],
 		create: [
 			local.hooks.hashPassword({ passwordField: "password" }),
 			checkPermissions({ roles: ["users"] })
@@ -44,7 +46,10 @@ module.exports = {
 	},
 
 	after: {
-		all: [local.hooks.protect("password")],
+		all: [
+			local.hooks.protect("password"),
+			restrictToPublic()
+		],
 		find: [],
 		get: [],
 		create: [],

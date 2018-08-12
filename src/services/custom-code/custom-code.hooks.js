@@ -1,5 +1,6 @@
 const auth = require("@feathersjs/authentication");
-const checkPermissions = require("feathers-permissions");
+
+const checkPermissions = require("../../hooks/check-permissions");
 
 const generalCustomCodePermissions = [
 	// Must be a logged in user

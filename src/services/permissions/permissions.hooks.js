@@ -1,6 +1,7 @@
 const auth = require("@feathersjs/authentication");
-const checkPermissions = require("feathers-permissions");
+
 const defaultPermissions = require("../../hooks/default-permissions");
+const checkPermissions = require("../../hooks/check-permissions");
 
 module.exports = {
 	before: {

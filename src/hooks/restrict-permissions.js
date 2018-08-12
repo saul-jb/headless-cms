@@ -6,7 +6,7 @@ module.exports = function (options = {}) {
 		// context.data is only on services "create", "update" and "patch"
 		//context.params is only availible when the request comes from the client
 		if (context.data && context.params && context.params.user) {
-			return context.app.service("services/permissions").get(context.params.user.permissionId).then(role => {
+			return context.app.service("services/permissions").get(context.params.user.permissions).then(role => {
 				if(
 					role &&
 					(role.permissions.includes("*") || role.permissions.includes("super_admin"))
@@ -16,11 +16,11 @@ module.exports = function (options = {}) {
 					// has permission for this
 				} else {
 					// Couldn't find the role...
-					delete context.data.permissionId;
+					delete context.data.permissions;
 				}
 			}).catch(() => {
 				// Couldn't find the role...
-				delete context.data.permissionId;
+				delete context.data.permissions;
 			});
 		}
 

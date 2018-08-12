@@ -41,7 +41,6 @@
 		"feathers-authentication-hooks": "^0.3.0",
 		"feathers-hooks-common": "^4.15.0",
 		"feathers-mongoose": "^6.1.2",
-		"feathers-permissions": "^0.2.1",
 		"helmet": "^3.12.1",
 		"mongoose": "^5.2.6",
 		"serve-favicon": "^2.5.0",

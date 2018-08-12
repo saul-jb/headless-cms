@@ -1,8 +1,8 @@
 const assert = require("assert");
 const feathers = require("@feathersjs/feathers");
-const populatePermissions = require("../../src/hooks/populate-permissions");
+// const restrictToPublic = require("../../src/hooks/restrict-to-public");
 
-describe("'populatePermissions' hook", () => {
+describe("'public' hook", () => {
 	let app;
 
 	beforeEach(() => {
@@ -15,13 +15,13 @@ describe("'populatePermissions' hook", () => {
 		});
 
 		app.service("dummy").hooks({
-			before: populatePermissions()
+
 		});
 	});
 
 	it("runs the hook", async () => {
 		const result = await app.service("dummy").get("test");
-    
+
 		assert.deepEqual(result, { id: "test" });
 	});
 });

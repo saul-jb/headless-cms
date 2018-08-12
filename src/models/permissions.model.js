@@ -7,7 +7,8 @@ module.exports = function (app) {
 	const { Schema } = mongooseClient;
 	const permissions = new Schema({
 		name: { type: String, unique: true, required: true },
-		permissions: [{ type: String, required: true }]
+		permissions: [{ type: String, required: true }],
+		level: { type: Number, required: true}
 	}, {
 		timestamps: true
 	});
