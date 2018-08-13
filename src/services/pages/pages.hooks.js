@@ -2,25 +2,27 @@ const auth = require("@feathersjs/authentication");
 
 const checkPermissions = require("../../hooks/check-permissions");
 
-const generalPagePermissions = [
-	// Must be a logged in user
-	auth.hooks.authenticate("jwt"),
-
-	// Has the correct permissions for this:
-	checkPermissions({
-		roles: ["pages"]
-	})
-];
-
 module.exports = {
 	before: {
 		all: [],
 		find: [],
 		get: [],
-		create: [...generalPagePermissions],
-		update: [...generalPagePermissions],
-		patch: [...generalPagePermissions],
-		remove: [...generalPagePermissions]
+		create: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:create", "pages:*"] })
+		],
+		update: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:update", "pages:*"] })
+		],
+		patch: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:patch", "pages:*"] })
+		],
+		remove: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:remove", "pages:*"] })
+		]
 	},
 
 	after: {

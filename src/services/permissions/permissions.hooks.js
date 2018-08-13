@@ -1,6 +1,5 @@
 const auth = require("@feathersjs/authentication");
 
-const defaultPermissions = require("../../hooks/default-permissions");
 const checkPermissions = require("../../hooks/check-permissions");
 
 module.exports = {
@@ -11,13 +10,10 @@ module.exports = {
 		],
 		find: [],
 		get: [],
-		create: [
-			checkPermissions({ roles: ["super_admin", "permissions"] }),
-			defaultPermissions()
-		],
-		update: [ checkPermissions({ roles: ["super_admin", "permissions"] }) ],
-		patch: [ checkPermissions({ roles: ["super_admin", "permissions"] }) ],
-		remove: [ checkPermissions({ roles: ["super_admin", "permissions"] }) ]
+		create: [ checkPermissions({ roles: ["permissions:create", "permissions:*"] }) ],
+		update: [ checkPermissions({ roles: ["permissions:update", "permissions:*"] }) ],
+		patch: [ checkPermissions({ roles: ["permissions:patch", "permissions:*"] }) ],
+		remove: [ checkPermissions({ roles: ["permissions:delete", "permissions:*"] }) ]
 	},
 
 	after: {

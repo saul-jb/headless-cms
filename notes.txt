@@ -34,5 +34,7 @@ Pages
 – update (PUT /tasks/:id) – updates the whole document by overwriting it with provided one (missing fields will be cleared)
 – patch (PATCH /tasks/:id) – updates only the fields provided (missing fields will remain untouched)
 – remove (DELETE /tasks/:id) – removes the document
-curl -GET/DELETE http://localhost:3030/messages/1
--X DELETE?
+curl -GET
+curl -X DELETE,PATCH,POST
+curl 'http://localhost:3030/services/users/5b6a4cfa2d8bd561bccc1ded' -H 'Content-Type: application/json' -PATCH --data-binary '{ "permissions": "5b6a4cf92d8bd561bccc1de9" }'
+-H "Authorization: <your access token>"

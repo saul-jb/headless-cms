@@ -2,25 +2,27 @@ const auth = require("@feathersjs/authentication");
 
 const checkPermissions = require("../../hooks/check-permissions");
 
-const generalCommentPermissions = [
-	// Must be a logged in user
-	auth.hooks.authenticate("jwt"),
-
-	// Has the correct permissions for this:
-	checkPermissions({
-		roles: ["comments"]
-	})
-];
-
 module.exports = {
 	before: {
 		all: [],
 		find: [],
 		get: [],
-		create: [...generalCommentPermissions],
-		update: [...generalCommentPermissions],
-		patch: [...generalCommentPermissions],
-		remove: [...generalCommentPermissions]
+		create: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:create", "comments:*"] })
+		],
+		update: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:update", "comments:*"] })
+		],
+		patch: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:patch", "comments:*"] })
+		],
+		remove: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:remove", "comments:*"] })
+		]
 	},
 
 	after: {

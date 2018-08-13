@@ -2,25 +2,27 @@ const auth = require("@feathersjs/authentication");
 
 const checkPermissions = require("../../hooks/check-permissions");
 
-const generalCustomCodePermissions = [
-	// Must be a logged in user
-	auth.hooks.authenticate("jwt"),
-
-	// Has the correct permissions for this:
-	checkPermissions({
-		roles: ["custom_code"]
-	})
-];
-
 module.exports = {
 	before: {
 		all: [],
 		find: [],
 		get: [],
-		create: [...generalCustomCodePermissions],
-		update: [...generalCustomCodePermissions],
-		patch: [...generalCustomCodePermissions],
-		remove: [...generalCustomCodePermissions]
+		create: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["custom_code:create", "custom_code:*"] })
+		],
+		update: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["custom_code:update", "custom_code:*"] })
+		],
+		patch: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["custom_code:patch", "custom_code:*"] })
+		],
+		remove: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["custom_code:remove", "custom_code:*"] })
+		]
 	},
 
 	after: {
