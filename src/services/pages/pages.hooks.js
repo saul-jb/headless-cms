@@ -1,25 +1,39 @@
 const auth = require("@feathersjs/authentication");
-const checkPermissions = require("feathers-permissions");
+const {restrictToOwner} = require("feathers-authentication-hooks");
+const {iff} = require("feathers-hooks-common");
 
-const generalPagePermissions = [
-	// Must be a logged in user
-	auth.hooks.authenticate("jwt"),
-
-	// Has the correct permissions for this:
-	checkPermissions({
-		roles: ["pages"]
-	})
-];
+const checkPermissions = require("../../hooks/check-permissions");
 
 module.exports = {
 	before: {
 		all: [],
 		find: [],
 		get: [],
-		create: [...generalPagePermissions],
-		update: [...generalPagePermissions],
-		patch: [...generalPagePermissions],
-		remove: [...generalPagePermissions]
+		create: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:create", "pages:*"] }),
+		],
+		update: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:update", "pages:*"], error: false }),
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		],
+		patch: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:patch", "pages:*"], error: false }),
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		],
+		remove: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["pages:remove", "pages:*"], error: false }),
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		]
 	},
 
 	after: {

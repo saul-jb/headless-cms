@@ -1,25 +1,39 @@
 const auth = require("@feathersjs/authentication");
-const checkPermissions = require("feathers-permissions");
+const {restrictToOwner} = require("feathers-authentication-hooks");
+const {iff} = require("feathers-hooks-common");
 
-const generalCommentPermissions = [
-	// Must be a logged in user
-	auth.hooks.authenticate("jwt"),
-
-	// Has the correct permissions for this:
-	checkPermissions({
-		roles: ["comments"]
-	})
-];
+const checkPermissions = require("../../hooks/check-permissions");
 
 module.exports = {
 	before: {
 		all: [],
 		find: [],
 		get: [],
-		create: [...generalCommentPermissions],
-		update: [...generalCommentPermissions],
-		patch: [...generalCommentPermissions],
-		remove: [...generalCommentPermissions]
+		create: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:create", "comments:*"] })
+		],
+		update: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:update", "comments:*"], error: false }),
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		],
+		patch: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:patch", "comments:*"], error: false }),
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		],
+		remove: [
+			auth.hooks.authenticate("jwt"),
+			checkPermissions({ roles: ["comments:remove", "comments:*"], error: false }),
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		]
 	},
 
 	after: {

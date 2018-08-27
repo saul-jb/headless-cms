@@ -19,7 +19,14 @@ module.exports = function (app) {
 
 			return permissionService.create({
 				name: "super_admin",
-				permissions: "*"
+				permissions: [
+					"pages:*",
+					"comments:*",
+					"custom_code:*",
+					"users:*",
+					"permissions:*"
+				],
+				level: 10
 			}).then(superAdminPermission => {
 				const promises = [];
 
@@ -27,7 +34,7 @@ module.exports = function (app) {
 					username: "admin",
 					email: "admin",
 					password: "admin",
-					permissionId: superAdminPermission._id
+					permissions: superAdminPermission._id
 				}));
 
 				promises.push(permissionService.create(permissionsSeed));

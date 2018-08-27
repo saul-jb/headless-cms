@@ -1,50 +1,64 @@
-const auth = require("@feathersjs/authentication");
 const local = require("@feathersjs/authentication-local");
-const checkPermissions = require("feathers-permissions");
 const {restrictToOwner} = require("feathers-authentication-hooks");
 const {iff} = require("feathers-hooks-common");
 
-const restrictPermissions = require("../../hooks/restrict-permissions");
+const auth = require("../../hooks/auth");
+const restrictToPublic = require("../../hooks/restrict-to-public");
+const restrictProtected = require("../../hooks/restrict-protected");
 
-const generalUserPermmisions = [
-	// Must be a logged in user
-	auth.hooks.authenticate("jwt"),
-
-	// Must not send password as plain text
-	local.hooks.hashPassword({ passwordField: "password" }),
-
-	// Must have this permission...
-	checkPermissions({
-		roles: ["users"],
-		error: false
-	}),
-	// ...or is the owner
-	iff(context => !context.params.permitted,
-		restrictToOwner({ idField: "_id", ownerField: "_id"})
-	)
-];
-
-const populatePermissions = require("../../hooks/populate-permissions");
+const checkPermissions = require("../../hooks/check-permissions");
 
 module.exports = {
 	before: {
-		all: [// Prevent the user from modifying permissions
-			restrictPermissions(),
-			populatePermissions()
+		all: [
+			// Prepare the "restrict-to-public" hook
+			auth(),
+			// Prevent the user from modifying proctected attributes
+			restrictProtected()
 		],
-		find: [...generalUserPermmisions],
-		get: [...generalUserPermmisions],
+		find: [],
+		get: [],
 		create: [
+			// Keep that password safe
 			local.hooks.hashPassword({ passwordField: "password" }),
-			checkPermissions({ roles: ["users"] })
+			//checkPermissions({ roles: ["users"] })
 		],
-		update: [...generalUserPermmisions],
-		patch: [...generalUserPermmisions],
-		remove: [...generalUserPermmisions]
+		update: [
+			// Keep that password safe
+			local.hooks.hashPassword({ passwordField: "password" }),
+			// Has permission for this
+			checkPermissions({roles: ["users:update", "users:*"], error: false}),
+			// Or applying to self
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		],
+		patch: [
+			// Keep that password safe
+			local.hooks.hashPassword({ passwordField: "password" }),
+			// Has permission for this
+			checkPermissions({roles: ["users:patch", "users:*"], error: false}),
+			// Or applying to self
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		],
+		remove: [
+			// Has permission for this
+			checkPermissions({roles: ["users:remove", "users:*"], error: false}),
+			// Or applying to self
+			iff(context => !context.params.permitted,
+				restrictToOwner({ idField: "_id", ownerField: "_id"})
+			)
+		]
 	},
 
 	after: {
-		all: [local.hooks.protect("password")],
+		all: [
+			local.hooks.protect("password"),
+			// Remove any attributes not marked public
+			restrictToPublic()
+		],
 		find: [],
 		get: [],
 		create: [],

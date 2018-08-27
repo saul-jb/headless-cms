@@ -3,17 +3,26 @@
 module.exports = [
 	{
 		name: "admin",
-		permissions: ["admin", "pages:*", "comments:*", "custom_code:*", "users:*"]
+		permissions: [
+			"pages:*",
+			"comments:*",
+			"custom_code:*",
+			"users:*"
+		],
+		level: 9
 	},
 	{
 		name: "editor",
 		permissions: [
-			"editor",
-			"pages:create", "pages:update", "pages:patch"
-		]
+			"pages:create",
+			"pages:update",
+			"pages:patch"
+		],
+		level: 1
 	},
 	{
 		name: "subscriber",
-		permissions: ["subscriber"]
+		permissions: [],
+		level: 1
 	}
 ];

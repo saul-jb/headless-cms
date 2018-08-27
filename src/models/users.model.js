@@ -9,10 +9,9 @@ module.exports = function (app) {
 		// Required
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
-		username: { type: String, required: true },
+		username: { type: String, required: true, public: true },
 
-		permissionId: { type: Schema.Types.ObjectId, ref: "permissions" },
-		permissions: [{ type: String }],
+		permissions: { type: Schema.Types.ObjectId, ref: "permissions", protected: true },
 
 		// Meta data
 		name: { type: String }
