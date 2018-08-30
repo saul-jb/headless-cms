@@ -14,7 +14,7 @@ module.exports = function (app) {
 		permissions: { type: Schema.Types.ObjectId, ref: "permissions", protected: true },
 
 		// Meta data
-		name: { type: String }
+		name: { type: String, public: true }
 	}, {
 		timestamps: true
 	});

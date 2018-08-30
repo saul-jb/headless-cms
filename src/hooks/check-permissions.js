@@ -5,9 +5,9 @@ module.exports = function (options = {}) {
 	return context => {
 		if (context.data && context.params && context.params.user) {
 			return context.app.service("services/permissions").get(context.params.user.permissions).then(userRole => {
-
-				for (let role in options.roles) {
+				for (let role of options.roles) {
 					if (userRole.permissions.includes(role)) {
+						context.params.permitted = true;
 						return context;
 					}
 				}
